@@ -61,3 +61,4 @@ exports.login = (req, res, next) => {
         .catch(error => res.status(501).json({ error }))
     })
     .catch(error => res.status(502).json({ error }))
+}
