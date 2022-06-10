@@ -7,11 +7,11 @@ module.exports = (req, res, next) => {
         const userId = decodedToken.userId;
         req.auth = { userId };
         if (req.body.userId && req.body.userId !== userId) {
-            throw "Invalid user ID";
+            throw "Utilisateur non trouvé !";
         } else {
             next();
         }
     } catch {
-        res.status(401).json({ error : new Error("Invalid request !")});
+        res.status(401).json({ error : new Error("Requête non authentifiée !")});
     }
 };
