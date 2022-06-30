@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <HeaderPage/>
+    <HeaderPage />
     <main class="fond d-flex align-items-center">
-      <router-view/>
+      <router-view />
     </main>
     <FooterPage />
   </div>
@@ -17,29 +17,6 @@ export default {
   components: {
     HeaderPage,
     FooterPage,
-  },
-  data() {
-    return {
-      authenticated: false,
-      mockAccount: {
-        email: "mikl.17@free.fr",
-        password: "Mdp1234/",
-      },
-    };
-  },
-
-  mounted() {
-    if (!this.authenticated) {
-      this.$router.replace({ name: "Login" });
-    }
-  },
-  methods: {
-    setAuthenticated(status) {
-      this.authenticated = status;
-    },
-    logout() {
-      this.authenticated = false;
-    },
   },
 };
 </script>

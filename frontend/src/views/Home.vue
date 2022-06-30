@@ -1,17 +1,10 @@
 <template>
-  <div>
-    
-    
-  </div>
+  <div></div>
 </template>
 
 <script>
 // @ is an alias to /src
 export default {
-  name: "HomeB",
-}
-
-
-
-
+  name: "Home",
+};
 </script>
