@@ -20,7 +20,7 @@
           type="text"
           id="username"
           name="username"
-          v-model="userName"
+          v-model="form.userName"
           class="form-control form-control-lg"
         />
       </div>
@@ -31,7 +31,7 @@
           type="email"
           id="email"
           name="email"
-          v-model="email"
+          v-model="form.email"
           class="form-control form-control-lg"
         />
       </div>
@@ -42,13 +42,16 @@
           type="password"
           id="password"
           name="password"
-          v-model="password"
+          v-model="form.password"
           class="form-control form-control-lg"
         />
       </div>
-      <button v-on:click="register()" class="btn btn-dark btn-lg btn-block">
+      <button v-on:click="trySubmit" class="btn btn-dark btn-lg btn-block">
         Enregistrer
       </button>
+      <div>
+        <span v-for="err in getErrors" :key="err.value">{{ err.message }}</span>
+      </div>
       <p class="forgot-password text-right">
         Vous êtes déjà inscrit ?
         <router-link :to="{ name: 'Login' }">Se connecter</router-link>
@@ -60,81 +63,92 @@
 <script>
 export default {
   components: {},
-  data() {
+  data () {
     return {
-      userName: "",
-      email: "",
-      password: "",
-      isAdmin: null,
-    };
+      form: {
+        userName: '',
+        email: '',
+        password: '',
+        isAdmin: null
+      }
+    }
+  },
+  computed: {
+    getErrors () {
+      console.log(this.$store.state)
+      return 'this.$store.user.getters.getAllErrors'
+      // return this.$store.errors
+    }
   },
 
-  computed: {
-    isFisrtNameCorrect() {
+  /*computed: {
+    isFisrtNameCorrect () {
       const correct = Boolean(
-        this.firstname.match(/^([a-zA-Z]+[,.]?[ ]?|[a-zA-Z]+['-]?)$/)
-      );
-      correct ? console.log("Prénom correct") : console.log("Prénom incorrect");
-      return correct;
+        this.form.userName.match(/^([a-zA-Z]+[,.]?[ ]?|[a-zA-Z]+['-]?)$/)
+      )
+      correct ? console.log('Prénom correct') : console.log('Prénom incorrect')
+      return correct
     },
-    isLastNameCorrect() {
+    /* isLastNameCorrect () {
       const correct = Boolean(
         this.lastname.match(/^([a-zA-Z]+[,.]?[ ]?|[a-zA-Z]+['-]?)$/)
-      );
-      correct ? console.log("Nom correct") : console.log("Nom incorrect");
-      return correct;
+      )
+      correct ? console.log('Nom correct') : console.log('Nom incorrect')
+      return correct
     },
-    isEmailCorrect() {
+    isEmailCorrect () {
       const correct = Boolean(
-        this.email.match(
+        this.form.email.match(
           /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         )
-      );
-      correct ? console.log("Email correct") : console.log("Email incorrect");
-      return correct;
+      )
+      correct ? console.log('Email correct') : console.log('Email incorrect')
+      return correct
     },
-    isPasswordCorrect() {
+    isPasswordCorrect () {
       const correct = Boolean(
-        this.password.match(
+        this.form.password.match(
           /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
         )
-      );
+      )
       correct
-        ? console.log("Password correct")
-        : console.log("Password incorrect");
-      return correct;
+        ? console.log('Password correct')
+        : console.log('Password incorrect')
+      return correct
     },
-  },
-
-  methods: {
-    register: function () {
+    formIsValid () {
       if (
         !this.isFisrtNameCorrect ||
         !this.isLastNameCorrect ||
         !this.isEmailCorrect ||
         !this.isPasswordCorrect
       ) {
-        alert("Firstname or lastname or email or password incorrect");
-        return;
+        alert('Firstname or lastname or email or password incorrect')
+        return
       }
+    }
+  },*/
 
-      // Appel vers l'API
-      axios
-        .post("http://localhost:3000/api/users", {
-          userName: this.userName,
-          email: this.email,
-          password: this.password,
-        })
+  methods: {
+    trySubmit (e) {
+      e.preventDefault()
+      //if (this.formIsValid()) {
+      this.$store
+        .dispatch('user/register', { ...this.form })
         .then(function (response) {
-          console.log(response);
+          console.log(response)
         })
-        .catch(function (error) {
-          console.log(error);
-        });
-      //this.$router.push("/");
-    },
-  },
-};
+        .catch(error => {
+          console.log(error)
+
+          console.log(this.$store.user.state.errors)
+        })
+
+      //this.$router.push('/login')
+      //}
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">

@@ -7,7 +7,7 @@
         <input
           type="email"
           name="email"
-          v-model="email"
+          v-model="form.email"
           class="form-control form-control-lg"
           placeholder="adresse@exemple.com"
         />
@@ -17,12 +17,12 @@
         <input
           type="password"
           name="password"
-          v-model="password"
+          v-model="form.password"
           class="form-control form-control-lg"
           placeholder="ex : Cml018k/"
         />
       </div>
-      <button v-on:click="seConnecter()" class="btn btn-dark btn-lg btn-block">
+      <button @click="login" class="btn btn-dark btn-lg btn-block">
         Connexion
       </button>
       <p class="forgot-password text-right mt-2 mb-4">
@@ -32,71 +32,28 @@
   </div>
 </template>
 
-
 <script>
-import axios from "axios";
+import axios from 'axios'
 export default {
   components: {},
-  data() {
-    return {      
-        email: "",
-        password: "",
-      
-    };
+  data () {
+    return {
+      form: {
+        email: '',
+        password: ''
+      }
+    }
   },
-  computed: {
-    isEmailCorrect() {
-      const correct = Boolean(
-        this.email.match(
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        )
-      );
-      correct ? console.log("Email correct") : console.log("Email incorrect");
-      return correct;
-    },
-    isPasswordCorrect() {
-      const correct = Boolean(
-        this.password.match(
-          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
-        )
-      );
-      correct
-        ? console.log("Password correct")
-        : console.log("Password incorrect");
-      return correct;
-    },
-  },
-  
-   
-    
-  
+  computed: {},
 
   methods: {
-     seConnecter: function () {
-      if (!this.isEmailCorrect || !this.isPasswordCorrect) {
-        alert("Email or password incorrect");
-        return;
-      }
-      // Appel vers l'API
-      this.login();
-    },
-    login() {      
-      if (this.email != "" && this.password != "") {
-        if (
-          this.email == this.$parent.mockAccount.email &&
-          this.password == this.$parent.mockAccount.password
-        ) {
-          this.$emit("isAuthenticated", true);
-          this.$router.replace({ name: "AllPost" });
-        } else {
-          console.log("The username and / or password is incorrect");
-        }
-      } else {
-        console.log("A username and password must be present");
-      }
-    },
-  },
-};
+    login (e) {
+      e.preventDefault()
+      this.$store.dispatch('user/login', { ...this.form })
+      this.$router.push('/allPost')
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
